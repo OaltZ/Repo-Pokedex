@@ -1,0 +1,62 @@
+<!-- Arquivo: pokemon-detail.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/assets/css/detail.css">
+    <title>Pokemon Detail</title>
+</head>
+<body>
+    <div class="container" id="pokemonDetails"> <!-- Adicione a classe container aqui -->
+        <!-- Aqui serão exibidos os detalhes do Pokémon -->
+    </div>
+
+    <script>
+        // Função para obter o número do Pokémon da URL
+        function getPokemonNumberFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('number');
+        }
+
+        // Função para buscar os detalhes do Pokémon na API do Pokémon
+        function fetchPokemonDetails(pokemonNumber) {
+            const apiUrl = `https://pokeapi.co/api/v2/pokemon/${pokemonNumber}`;
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(pokemonData => {
+                    // Exibir os detalhes do Pokémon na página
+                    displayPokemonDetails(pokemonData);
+                })
+                .catch(error => console.error('Erro ao buscar os detalhes do Pokémon:', error));
+        }
+
+        // Função para exibir os detalhes do Pokémon na página
+        function displayPokemonDetails(pokemonData) {
+            // Aqui você pode manipular o DOM para exibir os detalhes do Pokémon
+            // Exemplo:
+            const pokemonDetailsContainer = document.getElementById('pokemonDetails');
+            pokemonDetailsContainer.innerHTML = `
+                <h1>${pokemonData.name}</h1>
+                <img src="${pokemonData.sprites.front_default}" alt="${pokemonData.name}">
+                <p>Número: ${pokemonData.id}</p>
+                <p>Altura: ${pokemonData.height}</p>
+                <p>Peso: ${pokemonData.weight}</p>
+                <!-- Adicione mais informações conforme necessário -->
+            `;
+        }
+
+        // Quando a página carregar, buscar o número do Pokémon na URL e buscar os detalhes do Pokémon
+        document.addEventListener('DOMContentLoaded', () => {
+            const pokemonNumber = getPokemonNumberFromURL();
+            if (pokemonNumber) {
+                fetchPokemonDetails(pokemonNumber);
+            } else {
+                console.error('Número do Pokémon não encontrado na URL.');
+            }
+        });
+    </script>
+</body>
+</html>
+
